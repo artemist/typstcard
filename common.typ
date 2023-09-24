@@ -58,7 +58,6 @@
     width: width,
     height: height,
     breakable: false,
-    fill: luma(240),
     address_content(width, height, card)
   )
 }

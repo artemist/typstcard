@@ -43,11 +43,11 @@ def get_avatar(url: str) -> str:
         return ""
 
     svg_text = f"""<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <mask id="circle" width="480" height="480">
-            <circle cx="240" cy="240" r="240" fill="white"></circle>
-        </mask>
-        <image width="480" height="480" mask="url(#circle)"
-            xlink:href="data:;base64,{base64.b64encode(avatar_raster).decode("utf-8")}"></image>
+        <clipPath id="circle">
+            <circle cx="240" cy="240" r="240" />
+        </clipPath>
+        <image width="480" height="480" clip-path="url(#circle)"
+            xlink:href="data:;base64,{base64.b64encode(avatar_raster).decode("utf-8")}" />
     </svg>"""
 
     with open(f"cache/{name}.svg", "w") as svgfile:
