@@ -1,0 +1,15 @@
+result
+.direnv
+
+*.pdf
+addresses.csv
+addresses.*.csv
+/content
+cache/
+
+*.pyc
+__pycache__/
+
+options.json
+next_serial.txt
+mailer_id.txt
