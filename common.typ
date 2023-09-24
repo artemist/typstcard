@@ -1,3 +1,34 @@
+#let address_text(card) = {
+  text(font: ("OCR-B", "Noto Emoji"), size: 8pt, card.address)
+}
+
+#let place_avatar(text_height, card) = {
+  style(styles => {
+    let text_offset = (text_height - measure(address_text(card), styles).height) / 2
+    place(top + left,
+      block(
+        width: 1in,
+        height: text_offset,
+        fill: luma(180),
+      )
+    )
+    place(top + left,
+      dy: text_offset,
+      block(
+        width: 1in,
+        height: 4pt,
+        fill: luma(160),
+      )
+    )
+    place(
+      top + left,
+      dx: 0.1in,
+      dy: text_offset + 4pt - 0.15in,
+      image(card.avatar, width: 0.3in)
+    )
+  })
+}
+
 #let address_content(width, height, card) = {
   set par(leading: 0.5em)
   let text_height = if card.imb == "" {
@@ -5,6 +36,7 @@
   } else {
     height - 1in/8
   }
+
   place(
     top + left,
     dx: 0.5in,
@@ -14,7 +46,7 @@
       fill: luma(230),
       align(
         start + horizon,
-        text(font: ("OCR-B", "Noto Emoji"), size: 8pt, card.address)
+        address_text(card)
       )
     )
   )
@@ -34,12 +66,7 @@
     )
   }
   if card.avatar != "" {
-    place(
-      top + left,
-      dx: 0.1in,
-      dy: 0.1in,
-      image(card.avatar, width: 0.3in)
-    )
+    place_avatar(text_height, card)
   }
 }
 
