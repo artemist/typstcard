@@ -27,7 +27,7 @@
           packages = [
             typst
             python3
-            python3Packages.autopep8
+            python3Packages.black
             python3Packages.requests
           ];
 

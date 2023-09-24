@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import base64
 import csv
 import json
 import os
@@ -19,18 +20,39 @@ def iso_code(s: str) -> str:
     return s
 
 
-def get_avatar(url: str) -> str:
+def get_orig_avatar(url: str, name: str) -> typing.Optional[bytes]:
     if not os.path.exists("cache"):
         os.mkdir("cache")
-    name = url.split("?")[0].split("/")[-1]
     if os.path.exists("cache/" + name):
-        return "cache/" + name
+        with open("cache/" + name, "rb") as infile:
+            return infile.read()
     result = requests.get(url)
     if result.ok:
         with open("cache/" + name, "wb") as outfile:
             outfile.write(result.content)
-        return "cache/" + name
-    return ""
+        return result.content
+    return None
+
+
+def get_avatar(url: str) -> str:
+    name = url.split("?")[0].split("/")[-1]
+    if os.path.exists(f"cache/{name}.svg"):
+        return f"cache/{name}.svg"
+    avatar_raster = get_orig_avatar(url, name)
+    if avatar_raster is None:
+        return ""
+
+    svg_text = f"""<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <mask id="circle" width="480" height="480">
+            <circle cx="240" cy="240" r="240" fill="white"></circle>
+        </mask>
+        <image width="480" height="480" mask="url(#circle)"
+            xlink:href="data:;base64,{base64.b64encode(avatar_raster).decode("utf-8")}"></image>
+    </svg>"""
+
+    with open(f"cache/{name}.svg", "w") as svgfile:
+        svgfile.write(svg_text)
+    return f"cache/{name}.svg"
 
 
 def get_country_name(
@@ -51,8 +73,7 @@ def get_country_name(
 parser = argparse.ArgumentParser(
     prog="format", description="format postcards with latex"
 )
-parser.add_argument("template", help="template to use",
-                    nargs="?", default="2card")
+parser.add_argument("template", help="template to use", nargs="?", default="2card")
 parser.add_argument(
     "-o", "--origin", help="origin country code", default="us", type=iso_code
 )

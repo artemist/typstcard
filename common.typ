@@ -5,25 +5,10 @@
 #let place_avatar(text_height, card) = {
   style(styles => {
     let text_offset = (text_height - measure(address_text(card), styles).height) / 2
-    place(top + left,
-      block(
-        width: 1in,
-        height: text_offset,
-        fill: luma(180),
-      )
-    )
-    place(top + left,
-      dy: text_offset,
-      block(
-        width: 1in,
-        height: 4pt,
-        fill: luma(160),
-      )
-    )
     place(
       top + left,
       dx: 0.1in,
-      dy: text_offset + 4pt - 0.15in,
+      dy: calc.max(text_offset + 4pt - 0.15in, 0pt),
       image(card.avatar, width: 0.3in)
     )
   })
@@ -43,7 +28,6 @@
     block(
       width: width - 0.5in,
       height: text_height,
-      fill: luma(230),
       align(
         start + horizon,
         address_text(card)
@@ -57,7 +41,6 @@
       block(
         width: 100%,
         height: 1in/8,
-        fill: luma(220),
         align(
           top + center,
           text(font: "USPSIMBCompact", size: 12pt, card.imb)
