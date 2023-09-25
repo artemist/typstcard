@@ -61,3 +61,43 @@
     address_content(width, height, card)
   )
 }
+
+
+#let postcard_content(width, height, content_fn, card) = {
+  // Content block
+  place(
+    top + left,
+    dx: 1in/8,
+    dy: 1in/8,
+    block(
+      width - 2.75in,
+      height - 0.25in,
+      breakable: false,
+      content_fn(card)
+    )
+  )
+
+  // Stamp placement guide
+  place(
+    top + right,
+    dx: -0.75in,
+    dy: 0.25in,
+    image("nixowos.png", width: 0.5in)
+  )
+
+  // Address block
+  place(
+    horizon + right,
+    dx: -2in - 5in/8,
+    address_block(2.5in, 1in, card)
+  )
+}
+
+#let postcard_block(width, height, content_fn, card) = {
+  block(
+    width: width,
+    height: height,
+    breakable: false,
+    postcard_content(width, height, content_fn, card)
+  )
+}
