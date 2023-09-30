@@ -107,6 +107,13 @@ parser.add_argument(
     help="CSV file containing addresses",
 )
 
+parser.add_argument(
+    "-n",
+    "--no-content",
+    action="store_true",
+    help="Skip content, e.g. to make postcard back labels"
+)
+
 args = parser.parse_args()
 
 root = ET.parse(
