@@ -12,6 +12,9 @@ import xml.etree.ElementTree as ET
 import requests
 import imb
 
+# A lot of stuff needs to be in the same directory, just chdir
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 
 def iso_code(s: str) -> str:
     if len(s) != 2:
@@ -92,11 +95,11 @@ def get_avatar(url: str, secrets: dict) -> str:
     if avatar_raster is None:
         return ""
 
-    svg_text = f"""<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    svg_text = f"""<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <clipPath id="circle">
-            <circle cx="240" cy="240" r="240" />
+            <circle cx="256" cy="256" r="256" />
         </clipPath>
-        <image width="480" height="480" clip-path="url(#circle)"
+        <image width="512" height="512" clip-path="url(#circle)"
             xlink:href="data:;base64,{base64.b64encode(avatar_raster).decode("utf-8")}" />
     </svg>"""
 
@@ -164,9 +167,13 @@ parser.add_argument(
     help="Skip content, e.g. to make postcard back labels",
 )
 
+parser.add_argument(
+    "-d", "--dont-compile", action="store_true", help="Don't compile to output.pdf"
+)
+
 args = parser.parse_args()
 
-root = ET.parse(
+cldr_root = ET.parse(
     f"{os.getenv('CLDR_ROOT')}/share/unicode/cldr/common/main/{args.language}.xml"
 )
 
@@ -188,7 +195,7 @@ for row in rows:
     country = (
         []
         if row["Country"].lower() == args.origin
-        else [get_country_name(root, row["Country"]).upper()]
+        else [get_country_name(cldr_root, row["Country"]).upper()]
     )
 
     address = row["Address"].split("\n") + country
@@ -228,3 +235,8 @@ with open("options.json", "w") as options:
             "cards": cards,
         },
     )
+
+if args.dont_compile:
+    exit()
+
+os.execlp("typst", "typst", "compile", args.template, "output.pdf")
