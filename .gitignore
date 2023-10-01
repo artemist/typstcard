@@ -11,5 +11,6 @@ cache/
 __pycache__/
 
 options.json
+secrets.json
 next_serial.txt
 mailer_id.txt
