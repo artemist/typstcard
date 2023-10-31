@@ -14,7 +14,7 @@
       top + left,
       dx: 1in/16,
       dy: 1in/16,
-      common.address_block(2.5in, 1in, card)
+      common.address_block(3in, 1in, card)
     )
   }
 }

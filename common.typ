@@ -38,11 +38,12 @@
     place(
       top + left,
       dy: height - 1in/8,
+      dx: 0.05in,
       block(
         width: 100%,
         height: 1in/8,
         align(
-          top + center,
+          top + left,
           text(font: "USPSIMBCompact", size: 12pt, card.imb)
         )
       )
