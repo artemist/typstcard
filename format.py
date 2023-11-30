@@ -239,4 +239,4 @@ with open("options.json", "w") as options:
 if args.dont_compile:
     exit()
 
-os.execlp("typst", "typst", "compile", args.template, "output.pdf")
+os.execlp("typst", "typst", "compile", "--font-path", "content", "--font-path", os.getenv("TYPST_FONT_PATHS"), args.template, "output.pdf")
