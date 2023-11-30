@@ -49,7 +49,7 @@
       )
     )
   }
-  if card.avatar != "" {
+  if card.avatar != none {
     place_avatar(text_height, card)
   }
 }
