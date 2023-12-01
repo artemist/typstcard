@@ -171,6 +171,8 @@ parser.add_argument(
     "-d", "--dont-compile", action="store_true", help="Don't compile to output.pdf"
 )
 
+parser.add_argument("-w", "--watch", action="store_true", help="Watch input files")
+
 args = parser.parse_args()
 
 cldr_root = ET.parse(
@@ -239,4 +241,14 @@ with open("options.json", "w") as options:
 if args.dont_compile:
     exit()
 
-os.execlp("typst", "typst", "compile", "--font-path", "content", "--font-path", os.getenv("TYPST_FONT_PATHS"), args.template, "output.pdf")
+os.execlp(
+    "typst",
+    "typst",
+    "watch" if args.watch else "compile",
+    "--font-path",
+    "content",
+    "--font-path",
+    os.getenv("TYPST_FONT_PATHS"),
+    args.template,
+    "output.pdf",
+)
