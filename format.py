@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import os
+import pathlib
 import string
 import typing
 import urllib.parse
@@ -161,6 +162,14 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "-i",
+    "--content-path",
+    default="content",
+    type=str,
+    help="Directory containing content files",
+)
+
+parser.add_argument(
     "-n",
     "--no-content",
     action="store_true",
@@ -216,6 +225,14 @@ for row in rows:
         }
     ]
 
+# Typst can't access files outside the project root, except through a symlink
+# Create one in cache to use here
+if not os.path.exists("cache"):
+    os.mkdir("cache")
+p = pathlib.Path("cache/content")
+p.unlink(missing_ok=True)
+p.symlink_to(args.content_path)
+
 cards = cards * args.count
 
 serial = imb.get_first_serial()
@@ -246,7 +263,7 @@ os.execlp(
     "typst",
     "watch" if args.watch else "compile",
     "--font-path",
-    "content",
+    args.content_path,
     "--font-path",
     os.getenv("TYPST_FONT_PATHS"),
     args.template,

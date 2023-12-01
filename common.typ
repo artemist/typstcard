@@ -116,7 +116,7 @@
   let content_fn = if args.no_content {
     _ => []
   } else {
-    import "content/content.typ"
+    import "cache/content/content.typ"
     content.content
   }
 
